@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormBuilder, Validators} from '@angular/forms';
+import { PasswordValidator } from './shared/password.validator';
+
+//import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -7,19 +10,34 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  registrationForm = new FormGroup({
-    userName: new FormControl('Ban-Gatto'),
-    password: new FormControl(''),
-    confirmPassword: new FormControl(''),
-    Address:new FormGroup({
-      state: new FormControl(''),
-      city: new FormControl(''),
-      postalCode: new FormControl('')
+  constructor(private fb: FormBuilder){}
+  registrationForm = this.fb.group({
+    //the item on index 0, is alwasy the default value
+    //the item on index 1, is the validator rule
+    userName:['', [Validators.required, Validators.minLength(4)]],
+    password: [''],
+    confirmPassword: [''],
+    Address: this.fb.group({
+      state: [''],
+      city: [''],
+      postalCode: ['']
     })
-  })
+  }, {validator: PasswordValidator });
 
+
+  //When not using form builder....
+  // registrationForm = new FormGroup({
+  //   userName: new FormControl('Ban-Gatto'),
+  //   password: new FormControl(''),
+  //   confirmPassword: new FormControl(''),
+  //   Address:new FormGroup({
+  //     state: new FormControl(''),
+  //     city: new FormControl(''),
+  //     postalCode: new FormControl('')
+  //   })
+  // })
   loadApiData(){
-    this.registrationForm.setValue({
+    this.registrationForm.patchValue({
       userName:'Kuon',
       password: 'tester',
       confirmPassword: 'tester',
